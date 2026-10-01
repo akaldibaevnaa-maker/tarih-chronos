@@ -57,7 +57,7 @@ const PhotoGallery = ({ galleryData }) => {
           >
             <div className="relative overflow-hidden">
               <img 
-                src={`${import.meta.env.BASE_URL}${photo.image.replace(/^\//, '')}`}
+                src={photo.image.startsWith('http') ? photo.image : `${import.meta.env.BASE_URL}${photo.image.replace(/^\//, '')}`}
                 alt={photo.name} 
                 className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
