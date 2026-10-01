@@ -57,7 +57,7 @@ const PhotoGallery = ({ galleryData }) => {
           >
             <div className="relative overflow-hidden">
               <img 
-                src={photo.image} 
+                src={`${import.meta.env.BASE_URL}${photo.image.replace(/^\//, '')}`}
                 alt={photo.name} 
                 className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
@@ -90,7 +90,7 @@ const PhotoGallery = ({ galleryData }) => {
           <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col md:flex-row shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="w-full md:w-3/5 bg-black flex items-center justify-center relative min-h-[300px] md:min-h-[500px]">
               <img 
-                src={selectedPhoto.image} 
+                src={`${import.meta.env.BASE_URL}${selectedPhoto.image.replace(/^\//, '')}`}
                 alt={selectedPhoto.name} 
                 className="max-w-full max-h-[50vh] md:max-h-[90vh] object-contain"
               />
