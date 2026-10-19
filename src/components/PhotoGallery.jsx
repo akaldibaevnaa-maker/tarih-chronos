@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Camera, X, Filter } from 'lucide-react';
+import { getImageUrl } from '../utils/imageUrl';
 
 const PhotoGallery = ({ galleryData }) => {
   const [selectedEpoch, setSelectedEpoch] = useState('Барлығы');
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [imgErrors, setImgErrors] = useState({});
 
   const epochs = [
     'Барлығы',
@@ -55,13 +57,21 @@ const PhotoGallery = ({ galleryData }) => {
             className="break-inside-avoid bg-white rounded-xl shadow-sm hover:shadow-xl transition-all overflow-hidden cursor-pointer group border border-golden/20"
             onClick={() => setSelectedPhoto(photo)}
           >
-            <div className="relative overflow-hidden">
-              <img 
-                src={photo.image.startsWith('http') ? photo.image : `${import.meta.env.BASE_URL}${photo.image.replace(/^\//, '')}`}
-                alt={photo.name} 
-                className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
+            <div className="relative overflow-hidden bg-indigo/5 min-h-[160px] flex items-center justify-center">
+              {!imgErrors[photo.id] ? (
+                <img 
+                  src={getImageUrl(photo.image)} 
+                  alt={photo.name} 
+                  className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  onError={() => setImgErrors(prev => ({ ...prev, [photo.id]: true }))}
+                />
+              ) : (
+                <div className="py-12 flex flex-col items-center justify-center text-golden">
+                  <Camera className="w-12 h-12 mb-2 opacity-50 text-indigo" />
+                  <span className="text-xs text-gray-400">Жәдігер бейнесі</span>
+                </div>
+              )}
               <div className="absolute inset-0 bg-indigo/0 group-hover:bg-indigo/20 transition-colors flex items-center justify-center">
                 <Camera className="text-white opacity-0 group-hover:opacity-100 transform scale-50 group-hover:scale-100 transition-all duration-300 w-12 h-12" />
               </div>
@@ -89,11 +99,19 @@ const PhotoGallery = ({ galleryData }) => {
           
           <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col md:flex-row shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="w-full md:w-3/5 bg-black flex items-center justify-center relative min-h-[300px] md:min-h-[500px]">
-              <img 
-                src={`${import.meta.env.BASE_URL}${selectedPhoto.image.replace(/^\//, '')}`}
-                alt={selectedPhoto.name} 
-                className="max-w-full max-h-[50vh] md:max-h-[90vh] object-contain"
-              />
+              {!imgErrors[`modal-${selectedPhoto.id}`] ? (
+                <img 
+                  src={getImageUrl(selectedPhoto.image)} 
+                  alt={selectedPhoto.name} 
+                  className="max-w-full max-h-[50vh] md:max-h-[90vh] object-contain"
+                  onError={() => setImgErrors(prev => ({ ...prev, [`modal-${selectedPhoto.id}`]: true }))}
+                />
+              ) : (
+                <div className="text-white/50 flex flex-col items-center">
+                  <Camera className="w-16 h-16 mb-2" />
+                  <span>Жәдігер фотосы</span>
+                </div>
+              )}
             </div>
             <div className="w-full md:w-2/5 p-6 md:p-10 bg-parchment flex flex-col overflow-y-auto">
               <div className="mb-auto">

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Users, Quote, Info, ChevronRight, X, Star } from 'lucide-react';
+import { getImageUrl } from '../utils/imageUrl';
 
 const Gallery = ({ personalities }) => {
   const [selected, setSelected] = useState(null);
+  const [imgErrors, setImgErrors] = useState({});
 
   return (
     <div>
@@ -21,8 +23,13 @@ const Gallery = ({ personalities }) => {
             onClick={() => setSelected(person)}
           >
            <div className="h-56 bg-indigo relative flex items-center justify-center border-b-4 border-golden overflow-hidden">
-               {person.image ? (
-                 <img src={person.image.startsWith('http') ? person.image : `${import.meta.env.BASE_URL}${person.image.replace(/^\//, '')}`} alt={person.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100" />
+               {person.image && !imgErrors[person.id] ? (
+                 <img 
+                   src={getImageUrl(person.image)} 
+                   alt={person.name} 
+                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100" 
+                   onError={() => setImgErrors(prev => ({ ...prev, [person.id]: true }))}
+                 />
                ) : (
                  <>
                    <div className="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
@@ -63,8 +70,13 @@ const Gallery = ({ personalities }) => {
               <div className="absolute bottom-0 left-0 w-40 h-40 bg-terracotta/20 rounded-full blur-3xl"></div>
               
               <div className="w-40 h-40 bg-golden rounded-full mb-6 flex items-center justify-center border-4 border-ivory shadow-xl relative z-10 mt-8 overflow-hidden">
-                {selected.image ? (
-                  <img src={selected.image.startsWith('http') ? selected.image : `${import.meta.env.BASE_URL}${selected.image.replace(/^\//, '')}`} alt={selected.name} className="w-full h-full object-cover" />
+                {selected.image && !imgErrors[`modal-${selected.id}`] ? (
+                  <img 
+                    src={getImageUrl(selected.image)} 
+                    alt={selected.name} 
+                    className="w-full h-full object-cover" 
+                    onError={() => setImgErrors(prev => ({ ...prev, [`modal-${selected.id}`]: true }))}
+                  />
                 ) : (
                   <Users className="w-20 h-20 text-indigo" />
                 )}

@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, GeoJSON } from 'react-l
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Compass, Clock, Map as MapIcon, Shield, Landmark, MapPin, Swords, User, History } from 'lucide-react';
+import { getImageUrl } from '../utils/imageUrl';
 
 const MapController = ({ locations, activeEpoch }) => {
   const map = useMap();
@@ -226,7 +227,12 @@ const GisMap = ({ locations }) => {
                 <Popup className="custom-popup" minWidth={250}>
                   <div className="p-1 min-w-[250px] max-w-[300px]">
                     {loc.image && (
-                      <img src={loc.image.startsWith('http') ? loc.image : `${import.meta.env.BASE_URL}${loc.image.replace(/^\//, '')}`} alt={loc.name} className="w-full h-32 object-cover rounded-md mb-2 border border-gray-200 shadow-sm" />
+                      <img 
+                        src={getImageUrl(loc.image)} 
+                        alt={loc.name} 
+                        className="w-full h-32 object-cover rounded-md mb-2 border border-gray-200 shadow-sm" 
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
                     )}
                     <h3 className="font-bold text-lg text-indigo mb-1 font-serif">{loc.name}</h3>
                     <p className="text-xs text-gray-500 mb-2 italic">Қазіргі атауы: {loc.modernName}</p>
