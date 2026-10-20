@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Map, Clock, LayoutDashboard, Search, Users, ShieldAlert, ArrowRight, UserCircle, Key, Camera } from 'lucide-react';
+import { BookOpen, Map, Clock, LayoutDashboard, Search, Users, ShieldAlert, ArrowRight, UserCircle, Key, Camera, Landmark } from 'lucide-react';
 import Timeline from './components/Timeline';
 import GisMap from './components/GisMap';
 import DetectiveQuest from './components/DetectiveQuest';
 import TeacherDashboard from './components/TeacherDashboard';
 import Gallery from './components/Gallery';
 import PhotoGallery from './components/PhotoGallery';
+import KyzylordaCapital from './components/KyzylordaCapital';
 import db from './history_database.json';
 
 function App() {
@@ -67,6 +68,7 @@ function App() {
 
   const tabs = [
     { id: 'home', label: 'Басты бет', icon: <BookOpen className="w-5 h-5" /> },
+    { id: 'kyzylorda', label: 'Қызылорда — Астана', icon: <Landmark className="w-5 h-5" /> },
     { id: 'timeline', label: 'Уақыт таспасы', icon: <Clock className="w-5 h-5" /> },
     { id: 'map', label: 'Тарихи карта', icon: <Map className="w-5 h-5" /> },
     { id: 'detective', label: 'Тапсырмалар орталығы', icon: <ShieldAlert className="w-5 h-5" /> },
@@ -204,6 +206,17 @@ function App() {
                 </p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10 max-w-6xl mx-auto text-left">
+                  <button onClick={() => setActiveTab('kyzylorda')} className="group bg-gradient-to-br from-parchment to-golden/10 p-8 rounded-2xl border-2 border-golden hover:border-terracotta shadow-md hover:shadow-2xl transition-all flex flex-col h-full relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-golden/20 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-terracotta mb-6 shadow-sm group-hover:-translate-y-1 transition-transform relative z-10 border border-golden/40">
+                      <Landmark className="w-8 h-8" />
+                    </div>
+                    <div className="inline-block bg-terracotta/10 text-terracotta text-xs font-bold px-2 py-0.5 rounded-full mb-2 w-max">1925–1929 жылдар</div>
+                    <h3 className="font-serif font-bold text-2xl text-indigo mb-3 relative z-10">Қызылорда — Астана</h3>
+                    <p className="text-gray-700 flex-1 mb-6 relative z-10 font-medium">Қазақ АКСР астаналық кезеңіндегі құрылыс пен инфрақұрылым шежіресі.</p>
+                    <div className="flex items-center text-terracotta font-bold text-sm uppercase tracking-wide relative z-10">Зерттеуді ашу <ArrowRight className="w-5 h-5 ml-2" /></div>
+                  </button>
+
                   <button onClick={() => setActiveTab('timeline')} className="group bg-parchment p-8 rounded-2xl border-2 border-golden/20 hover:border-terracotta shadow-md hover:shadow-xl transition-all flex flex-col h-full relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-terracotta/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
                     <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-terracotta mb-6 shadow-sm group-hover:-translate-y-1 transition-transform relative z-10 border border-terracotta/20">
@@ -267,6 +280,7 @@ function App() {
                 </div>
               </div>
             )}
+            {activeTab === 'kyzylorda' && <KyzylordaCapital />}
             {activeTab === 'timeline' && <Timeline data={db.timeline_events} />}
             {activeTab === 'map' && <GisMap locations={db.gis_locations} />}
             {activeTab === 'detective' && <DetectiveQuest cases={db.detective_cases} userData={userData} />}
