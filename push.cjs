@@ -1,17 +1,26 @@
 const git = require('isomorphic-git');
 const fs = require('fs');
 const http = require('isomorphic-git/http/node');
+const { execSync } = require('child_process');
 
 const dir = process.cwd();
 
 async function main() {
-  console.log('Initializing git repo...');
+  let token = process.env.GH_TOKEN;
+  if (!token) {
+    try {
+      token = execSync('gh auth token').toString().trim();
+    } catch (e) {}
+  }
+
+  console.log('Initializing git repo in root...');
   await git.init({ fs, dir });
 
-  console.log('Adding files (this might take a few seconds)...');
+  console.log('Checking status...');
   const paths = await git.statusMatrix({ fs, dir });
   
   for (const [filepath, head, workdir, stage] of paths) {
+    if (filepath.startsWith('node_modules') || filepath.startsWith('dist')) continue;
     if (workdir !== head) {
       if (workdir === 0) {
         await git.remove({ fs, dir, filepath });
@@ -21,37 +30,45 @@ async function main() {
     }
   }
 
-  console.log('Committing...');
-  await git.commit({
-    fs,
-    dir,
-    author: {
-      name: 'akaldibaevnaa-maker',
-      email: 'akaldibaevnaa-maker@users.noreply.github.com',
-    },
-    message: 'Initial commit'
-  });
+  console.log('Committing source files...');
+  try {
+    await git.commit({
+      fs,
+      dir,
+      author: {
+        name: 'akaldibaevnaa-maker',
+        email: 'akaldibaevnaa-maker@users.noreply.github.com',
+      },
+      message: 'Update 1928 Kyzylorda Engineers project: bright theme, quotes ticker, and passport'
+    });
+  } catch (e) {
+    console.log('Commit note:', e.message);
+  }
 
-  console.log('Adding remote...');
-  await git.addRemote({
-    fs,
-    dir,
-    remote: 'origin',
-    url: 'https://github.com/akaldibaevnaa-maker/tarih-chronos'
-  });
+  try {
+    await git.addRemote({
+      fs,
+      dir,
+      remote: 'origin',
+      url: 'https://github.com/akaldibaevnaa-maker/tarih-chronos'
+    });
+  } catch (e) {
+    console.log('Remote note:', e.message);
+  }
 
-  console.log('Pushing to GitHub...');
-
+  console.log('Pushing to GitHub master...');
   await git.push({
     fs,
     http,
     dir,
     remote: 'origin',
     ref: 'master',
-    onAuth: () => ({ username: process.env.GH_TOKEN, password: '' })
+    force: true,
+    onAuth: () => ({ username: token, password: '' })
   });
   
-  console.log('Push complete!');
+  console.log('Source push complete!');
 }
 
 main().catch(console.error);
+

@@ -3,22 +3,24 @@
 @import "tailwindcss";
 
 @theme {
-  --color-parchment: #FAF6EE;
-  --color-ivory: #F3EBD8;
-  --color-terracotta: #8B3A2B;
-  --color-indigo: #1E2A38;
-  --color-golden: #C29B38;
+  --color-parchment: #FDFCF7;
+  --color-ivory: #FFFDF9;
+  --color-terracotta: #A83824;
+  --color-indigo: #1E293B;
+  --color-golden: #D4A017;
   --font-sans: 'Inter', 'Onest', sans-serif;
   --font-serif: 'Playfair Display', serif;
 }
 
 body {
-  background-color: var(--color-parchment);
-  color: var(--color-indigo);
+  background-color: #FAF8F2;
+  color: #1E293B;
   font-family: var(--font-sans);
   background-image: 
-    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30,70 Q40,40 50,70 Q60,40 70,70 M45,55 L55,55' stroke='%238B3A2B' stroke-width='2' fill='none' opacity='0.03'/%3E%3Ccircle cx='80' cy='20' r='10' stroke='%238B3A2B' stroke-width='1.5' stroke-dasharray='3 3' fill='none' opacity='0.04'/%3E%3C/svg%3E"),
-    linear-gradient(to bottom, #FAF6EE, #F3EBD8);
+    radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.08) 0px, transparent 45%),
+    radial-gradient(at 100% 0%, rgba(251, 191, 36, 0.07) 0px, transparent 40%),
+    radial-gradient(at 50% 100%, rgba(217, 119, 6, 0.05) 0px, transparent 50%),
+    linear-gradient(to bottom, #FCFBF7, #F5F3E8);
   background-attachment: fixed;
 }
 
@@ -77,4 +79,25 @@ h1, h2, h3, h4, h5, h6 {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--color-terracotta);
+}
+
+/* Moving words / Aphorisms marquee ticker animation */
+@keyframes ticker-slide {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: ticker-slide 42s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
